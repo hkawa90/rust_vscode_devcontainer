@@ -1,0 +1,61 @@
+// Could not disable address space layout randomization (ASLR).
+// (Possibly due to running in a restricted container. Add "initCommands":["settings set target.disable-aslr false"] to the launch configuration to suppress this warning.)
+
+// Dockerコンテナに対してのみカーネルパラメータを変更することはできないため、コンテナからは操作しない。カーネルパラメータの変更はホストマシン上で行う。
+// sysctl -w kernel.randomize_va_space=0
+{
+    // TODO:事前にUSERIDを設定してください(id -u $USER)
+    "name": "dev-rust-dev_env",
+    // TODO:使用するユーザ名を指定する
+    "remoteUser": "kawa90",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "..", // buildするディレクトリへの相対パス
+        "args": {
+            "user": "${localEnv:USER}",
+            "userid": "${localEnv:USERID}",
+//            "--target": "tracer_and_node"
+        } // build-args
+     },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "rust-lang.rust-analyzer",
+                "vadimcn.vscode-lldb",
+                "serayuzgur.crates",
+                "tamasfe.even-better-toml"
+            ],
+            "settings": {
+                "terminal.integrated.shell.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash (container default)": {
+                        "path": "/usr/bin/bash",
+                        "overrideName": true
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "clangTidy.executable": "/usr/lib/llvm-10/bin/clang-tidy",
+                "terminal.integrated.shellIntegration.enabled" : false
+            }
+        }
+    }
+}
+// [Rust コーディング環境構築@VSCode](https://zenn.dev/23prime/articles/74cda5a096a3b3)
+// [Windows で Rust 用の開発環境を設定する | Microsoft Learn](https://learn.microsoft.com/ja-jp/windows/dev-environment/rust/setup)
+// [Windows 用 Rust と windows クレート | Microsoft Learn](https://learn.microsoft.com/ja-jp/windows/dev-environment/rust/rust-for-windows)
+
+// https://rustc-dev-guide.rust-lang.org/building/suggested.html#configuring-rust-analyzer-for-rustc
+// .vscode/tasks.json
+// {
+//     "version": "2.0.0",
+//     "tasks": [
+//         {
+//             "label": "./x check",
+//             "command": "./x check",
+//             "type": "shell",
+//             "problemMatcher": "$rustc",
+//             "presentation": { "clear": true },
+//             "group": { "kind": "build", "isDefault": true }
+//         }
+//     ]
+// }
