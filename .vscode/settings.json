@@ -1,0 +1,9 @@
+{
+    "[rust]": {
+        // formatting
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "editor.formatOnType": true
+    },
+    "rust-analyzer.rustfmt.extraArgs": ["--config-path", "${workspaceFolder}"]
+}
